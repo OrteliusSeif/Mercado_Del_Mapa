@@ -1,16 +1,21 @@
+from markett import db
 from flask import Flask, render_template
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import declarative_base, relationship
 from flask_sqlalchemy import SQLAlchemy
-app = Flask(__name__)
 import os
+from markett import app
 
 
 
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///' + os.path.join(basedir, 'Carto_database.db')
+#basedir = os.path.abspath(os.path.dirname(__file__))
+#app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///' + os.path.join(basedir, 'Carto_database.db')
 
 db = SQLAlchemy(app)
+
+
 
 class User(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -29,61 +34,20 @@ class Item(db.Model):
     description = db.Column(db.String(length=1024), nullable=False, unique=True)
     owner= db.Column(db.Integer(), db.ForeignKey('user.id'))
 
-app.app_context().push()
-db.create_all()
-db.session.commit()
+#app.app_context().push()
+#db.create_all()
+#db.session.commit()
 
 
 
 def __repr__(self):
     return f'Item {self.name}'
+
+
+
 #item3 = Item(map_title="Map of Bartolomeo Pareto (1455)", price =987, barcode="987654356123", description="Ancient Map")
 #from market import app, db
 #app.app_context().push()
 #db.create_all()
 #db.session.add(item3)
 #db1.session.commit()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@app.route('/')
-@app.route('/home')
-def home_page():
-    return render_template('home.html')
-
-
-
-@app.route('/market')
-def market_page():
-    items = Item.query.all()
-    #items = [
-    #{'id': 1, 'map_title': 'Atlas Maior', 'barcode': '893212299897', 'price': 500},
-    #{'id': 2, 'map_title': 'Fra Mauro map of the world', 'barcode': '123985473165', 'price': 900},
-   # {'id': 3, 'map_title': 'Anaximander world map', 'barcode': '231985128446', 'price': 150}
-    #]
-
-
-
-
-
-
-    return render_template('market.html', items=items)
-
-
-
-app.debug = True
-app.run(debug=True, use_debugger=False, use_reloader=False)
