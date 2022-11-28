@@ -1,4 +1,4 @@
-from markett import db
+##from markett import db
 from flask import Flask, render_template
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import declarative_base, relationship
@@ -10,8 +10,8 @@ from markett import app
 
 
 
-#basedir = os.path.abspath(os.path.dirname(__file__))
-#app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///' + os.path.join(basedir, 'Carto_database.db')
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///' + os.path.join(basedir, 'Mapa_database.db')
 
 db = SQLAlchemy(app)
 
@@ -34,9 +34,9 @@ class Item(db.Model):
     description = db.Column(db.String(length=1024), nullable=False, unique=True)
     owner= db.Column(db.Integer(), db.ForeignKey('user.id'))
 
-#app.app_context().push()
-#db.create_all()
-#db.session.commit()
+app.app_context().push()
+db.create_all()
+db.session.commit()
 
 
 

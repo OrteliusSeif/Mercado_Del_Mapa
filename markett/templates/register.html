@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}
+Register Form
+{% endblock %}
+
+
+{% block content %}
+<body class="text-center">
+    <div class="container">
+        <form method="POST" class="form-register" style="color:antiquewhite">
+            <img class "mb-4" src="https://bitcoinist.com/wp-content/uploads/2021/08/cardano-1.jpeg" width="300" height="200">
+            <h1 class="h3 mb-3 font-weight-normal">
+                Please Create your Account
+            </h1>
+            <br>
+            {{ form.username.label() }}
+            {{ form.username(class="form-control", placeholder="User Name") }}
+<br>
+            {{ form.email_address.label() }}
+            {{ form.email_address(class="form-control", placeholder="Email Address") }}
+<br>
+            {{ form.password1.label() }}
+            {{ form.password1(class="form-control", placeholder="Password") }}
+<br>
+            {{ form.password2.label() }}
+            {{ form.password2(class="form-control", placeholder="Confirm Password") }}
+
+            <br>
+
+            {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+
+
+
+        </form>
+
+    </div>
+</body>
+{% endblock %}

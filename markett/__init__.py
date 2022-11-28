@@ -7,7 +7,8 @@ app = Flask(__name__)
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///' + os.path.join(basedir, 'Carto_database.db')
+app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///' + os.path.join(basedir, 'Mapa_database.db')
+app.config['SECRET_KEY'] = 'b0952ea2695b415757564fc0'
 db = SQLAlchemy(app)
 
 from markett import routes
