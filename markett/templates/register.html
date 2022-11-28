@@ -8,6 +8,11 @@ Register Form
 <body class="text-center">
     <div class="container">
         <form method="POST" class="form-register" style="color:antiquewhite">
+            {{ form.hidden_tag() }}
+
+
+
+
             <img class "mb-4" src="https://bitcoinist.com/wp-content/uploads/2021/08/cardano-1.jpeg" width="300" height="200">
             <h1 class="h3 mb-3 font-weight-normal">
                 Please Create your Account
@@ -16,8 +21,8 @@ Register Form
             {{ form.username.label() }}
             {{ form.username(class="form-control", placeholder="User Name") }}
 <br>
-            {{ form.email_address.label() }}
-            {{ form.email_address(class="form-control", placeholder="Email Address") }}
+            {{ form.email_adress.label() }}
+            {{ form.email_adress(class="form-control", placeholder="Email Address") }}
 <br>
             {{ form.password1.label() }}
             {{ form.password1(class="form-control", placeholder="Password") }}
