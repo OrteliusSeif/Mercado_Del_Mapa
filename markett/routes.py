@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, flash
 from markett.models import Item, User
 from markett.forms import RegisterForm, LoginForm
 from markett import db
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 
 
 
@@ -15,6 +15,7 @@ def home_page():
 
 
 @app.route('/market')
+@login_required
 def market_page():
     items = Item.query.all()
     return render_template('market.html', items=items)
@@ -34,6 +35,11 @@ def register_page():
                               password=form.password1.data)
         db.session.add(user_to_create)
         db.session.commit()
+        login_user(user_to_create)
+        flash(f'Account created successfully! You are now logged in as {user_to_create.username}', category='success')
+
+
+
         return redirect(url_for('market_page'))
     if form.errors !={}: #If there are not errors from the validations
         for err_msg in form.errors.values():
@@ -61,6 +67,12 @@ def login_page():
 
 
     return render_template('login.html', form=form)
+
+@app.route('/logout')
+def logout_page():
+    logout_user()
+    flash("You have been logged out!!", category='info')
+    return redirect(url_for("home_page"))
 
 
 
