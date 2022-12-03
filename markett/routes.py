@@ -1,9 +1,9 @@
 from markett import app
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from markett.models import Item, User
-from markett.forms import RegisterForm, LoginForm
+from markett.forms import RegisterForm, LoginForm, PurchaseItemForm
 from markett import db
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required,current_user
 
 
 
@@ -14,11 +14,28 @@ def home_page():
 
 
 
-@app.route('/market')
+@app.route('/market', methods=['GET', 'POST'])
 @login_required
 def market_page():
-    items = Item.query.all()
-    return render_template('market.html', items=items)
+    purchase_form = PurchaseItemForm() 
+    if request.method == "POST":
+        purchased_item = request.form.get('purchased_item')
+        p_item_object = Item.query.filter_by(map_title=purchased_item).first()
+        if p_item_object:
+            if current_user.can_purchase(p_item_object):
+                p_item_object.buy(current_user)
+               
+                flash(f"Congratulations! You purchased {p_item_object.map_title} for {p_item_object.price}", category='success')
+            else:
+                flash(f"Unfortunately, you don't have enough money to purchase {p_item_object.map_title}", category='danger')
+        
+
+
+        return redirect(url_for('market_page'))
+    
+    if request.method == "GET":
+        items = Item.query.filter_by(owner=None)
+        return render_template('market.html', items=items, purchase_form=purchase_form)
     #items = [
     #{'id': 1, 'map_title': 'Atlas Maior', 'barcode': '893212299897', 'price': 500},
     #{'id': 2, 'map_title': 'Fra Mauro map of the world', 'barcode': '123985473165', 'price': 900},
