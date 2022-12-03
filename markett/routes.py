@@ -1,7 +1,7 @@
 from markett import app
 from flask import render_template, redirect, url_for, flash, request
 from markett.models import Item, User
-from markett.forms import RegisterForm, LoginForm, PurchaseItemForm
+from markett.forms import RegisterForm, LoginForm, PurchaseItemForm, SellItemForm
 from markett import db
 from flask_login import login_user, logout_user, login_required,current_user
 
@@ -18,7 +18,11 @@ def home_page():
 @login_required
 def market_page():
     purchase_form = PurchaseItemForm() 
+    selling_form = SellItemForm()
     if request.method == "POST":
+
+        #Purchase Item Chunck
+
         purchased_item = request.form.get('purchased_item')
         p_item_object = Item.query.filter_by(map_title=purchased_item).first()
         if p_item_object:
@@ -29,13 +33,29 @@ def market_page():
             else:
                 flash(f"Unfortunately, you don't have enough money to purchase {p_item_object.map_title}", category='danger')
         
+        #Sell Item Chunck
+        sold_item= request.form.get('sold_item')
+        s_item_object = Item.query.filter_by(map_title=sold_item).first()
+        if s_item_object:
+            if current_user.can_sell(s_item_object):
+                s_item_object.sell(current_user)
+                flash(f"Congratulations! You sold {s_item_object.map_title} back to market!!", category='success')
+            
+            else:
+                 flash(f"Issue happens with selling {s_item_object.map_title}", category='danger')
+
+
+
+
+
 
 
         return redirect(url_for('market_page'))
     
     if request.method == "GET":
         items = Item.query.filter_by(owner=None)
-        return render_template('market.html', items=items, purchase_form=purchase_form)
+        owned_item = Item.query.filter_by(owner=current_user.id)
+        return render_template('market.html', items=items, purchase_form=purchase_form, owned_item=owned_item, selling_form=selling_form)
     #items = [
     #{'id': 1, 'map_title': 'Atlas Maior', 'barcode': '893212299897', 'price': 500},
     #{'id': 2, 'map_title': 'Fra Mauro map of the world', 'barcode': '123985473165', 'price': 900},

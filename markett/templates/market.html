@@ -43,6 +43,30 @@ Market Page
     <h2>Owned Items</h2>
     <p>Click on sell iitem to put an item back on the Market</p>
     <br>
+    <div class="row">
+      {% for owned_item in owned_item %}
+      {% include 'includes/owned_items_modals.html' %}
+
+      <div class="col-md-6">
+
+         <div style="margin-bottom: 4px" class="card text-center bg-dark">
+            <div class="card-body">
+                <h5 class="card-title">{{ owned_item.map_title }}</h5>
+                <button type="button" class="btn btn-outline-danger" style="margin-bottom: 5px"
+                        data-toggle="modal" data-target="#SellingConfirm-{{ owned_item.id }}">
+                    Sell this Item
+                </button>
+                <p class="card-text"><strong>
+                    This item costs {{ owned_item.price }}₳
+                </strong></p>
+            </div>
+        </div>
+
+
+
+      </div>
+    </div>
+      {% endfor%}
     
    </div>
 </div>
